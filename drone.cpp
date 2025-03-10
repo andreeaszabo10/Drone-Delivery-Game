@@ -1,4 +1,4 @@
-#include "lab_m1/tema2/tema2.h"
+#include "drone.h"
 
 #include <vector>
 #include <string>
@@ -15,7 +15,7 @@ using namespace m1;
  */
 
 
-Tema2::Tema2()
+DroneDelivery::DroneDelivery()
 {
     fov = RADIANS(60);
     znear = 0.01f;
@@ -30,11 +30,11 @@ Tema2::Tema2()
 }
 
 
-Tema2::~Tema2()
+DroneDelivery::~DroneDelivery()
 {
 }
 
-Mesh* Tema2::CreateCloud(const glm::vec3& size) {
+Mesh* DroneDelivery::CreateCloud(const glm::vec3& size) {
     std::vector<VertexFormat> vertices;
     std::vector<unsigned int> indices;
     glm::vec3 cloudColor(1.0f, 1.0f, 1.0f);
@@ -92,7 +92,7 @@ Mesh* Tema2::CreateCloud(const glm::vec3& size) {
     return cloud;
 }
 
-void Tema2::CloudsInit() {
+void DroneDelivery::CloudsInit() {
     clouds.clear();
 
     for (int i = 0; i < 20; i++) {
@@ -109,7 +109,7 @@ void Tema2::CloudsInit() {
     }
 }
 
-void Tema2::Clouds(float deltaTimeSeconds) {
+void DroneDelivery::Clouds(float deltaTimeSeconds) {
     for (auto& cloud : clouds) {
         
         if (cloud.moveRight) {
@@ -132,7 +132,7 @@ void Tema2::Clouds(float deltaTimeSeconds) {
     }
 }
 
-Mesh* Tema2::CreateTerrain(int size, float space) {
+Mesh* DroneDelivery::CreateTerrain(int size, float space) {
     std::vector<VertexFormat> vertices;
     std::vector<unsigned int> indices;
 
@@ -164,20 +164,20 @@ Mesh* Tema2::CreateTerrain(int size, float space) {
     return terrain;
 }
 
-bool Tema2::checkPos(const glm::vec3& pos1, const glm::vec3& size1, const glm::vec3& pos2, const glm::vec3& size2) {
+bool DroneDelivery::checkPos(const glm::vec3& pos1, const glm::vec3& size1, const glm::vec3& pos2, const glm::vec3& size2) {
     return (pos1.x - size1.x <= pos2.x + size2.x &&
         pos1.x + size1.x >= pos2.x - size2.x &&
         pos1.z - size1.z <= pos2.z + size2.z &&
         pos1.z + size1.z >= pos2.z - size2.z);
 }
 
-glm::vec3 Tema2::getRandomPos(float minX, float maxX, float minZ, float maxZ) {
+glm::vec3 DroneDelivery::getRandomPos(float minX, float maxX, float minZ, float maxZ) {
     float x = minX + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (maxX - minX)));
     float z = minZ + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (maxZ - minZ)));
     return glm::vec3(x, 0.0f, z);
 }
 
-Mesh* Tema2::CreateArrow(const glm::vec3& size) {
+Mesh* DroneDelivery::CreateArrow(const glm::vec3& size) {
     std::vector<VertexFormat> vertices;
     std::vector<unsigned int> indices;
     glm::vec3 color(1.0f, 0.0f, 0.0f);
@@ -208,14 +208,14 @@ Mesh* Tema2::CreateArrow(const glm::vec3& size) {
     return arrow;
 }
 
-glm::vec3 Tema2::Target() const {
+glm::vec3 DroneDelivery::Target() const {
     if (!package) {
         return packagePos;
     }
     return destination;
 }
 
-float Tema2::GetAngle(const glm::vec3& currentPos, const glm::vec3& targetPos) const {
+float DroneDelivery::GetAngle(const glm::vec3& currentPos, const glm::vec3& targetPos) const {
     glm::vec2 direction = glm::vec2(
         targetPos.x - currentPos.x,
         targetPos.z - currentPos.z
@@ -223,7 +223,7 @@ float Tema2::GetAngle(const glm::vec3& currentPos, const glm::vec3& targetPos) c
     return atan2(direction.y, direction.x);
 }
 
-Mesh* Tema2::CreateCuboid(const std::string& name, glm::vec3 corner, float X, float Y, float Z, glm::vec3 color) {
+Mesh* DroneDelivery::CreateCuboid(const std::string& name, glm::vec3 corner, float X, float Y, float Z, glm::vec3 color) {
     std::vector<VertexFormat> vertices = {
         VertexFormat(corner, color),
         VertexFormat(corner + glm::vec3(X, 0, 0), color),
@@ -249,7 +249,7 @@ Mesh* Tema2::CreateCuboid(const std::string& name, glm::vec3 corner, float X, fl
     return cuboid;
 }
 
-Mesh* Tema2::CreateTree(const glm::vec3& size) {
+Mesh* DroneDelivery::CreateTree(const glm::vec3& size) {
     std::vector<VertexFormat> vertices;
     std::vector<unsigned int> indices;
 
@@ -339,11 +339,11 @@ Mesh* Tema2::CreateTree(const glm::vec3& size) {
     return tree;
 }
 
-Mesh* Tema2::CreateBuilding(const glm::vec3& size) {
+Mesh* DroneDelivery::CreateBuilding(const glm::vec3& size) {
     return CreateCuboid("obstacle2", glm::vec3(-size.x / 2, 0, -size.z / 2), size.x, size.y, size.z, glm::vec3(0.4f, 0.4f, 0.4f));
 }
 
-Mesh* Tema2::CreateDrone() {
+Mesh* DroneDelivery::CreateDrone() {
     glm::vec3 corner = glm::vec3(-0.75f, 0, 0.1f);
     glm::vec3 greyColor = glm::vec3(0.5f, 0.5f, 0.5f);
     glm::vec3 blackColor = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -367,7 +367,7 @@ Mesh* Tema2::CreateDrone() {
     return nullptr;
 }
 
-bool Tema2::checkCollision(const glm::vec3& pos) {
+bool DroneDelivery::checkCollision(const glm::vec3& pos) {
     if (gameOver) return true;
 
     float droneRadius = 0.75f;
@@ -441,17 +441,17 @@ bool Tema2::checkCollision(const glm::vec3& pos) {
     return false;
 }
 
-Mesh* Tema2::CreatePlatform(const glm::vec3& size) {
+Mesh* DroneDelivery::CreatePlatform(const glm::vec3& size) {
     glm::vec3 corner = glm::vec3(-size.x / 2, 0, -size.z / 2);
     return CreateCuboid("platform", corner, size.x, size.y, size.z, glm::vec3(0.6f, 0.6f, 0.6f));
 }
 
-Mesh* Tema2::CreatePackage(const glm::vec3& size) {
+Mesh* DroneDelivery::CreatePackage(const glm::vec3& size) {
     glm::vec3 corner = glm::vec3(-size.x / 2, 0, -size.z / 2);
     return CreateCuboid("package", corner, size.x, size.y, size.z, glm::vec3(0.8f, 0.6f, 0.4f));
 }
 
-Mesh* Tema2::CreateCircle(float radius, int segments) {
+Mesh* DroneDelivery::CreateCircle(float radius, int segments) {
     std::vector<VertexFormat> vertices;
     std::vector<unsigned int> indices;
     glm::vec3 color(1.0f, 0.0f, 0.0f);
@@ -476,7 +476,7 @@ Mesh* Tema2::CreateCircle(float radius, int segments) {
     return circle;
 }
 
-void Tema2::NewPackage() {
+void DroneDelivery::NewPackage() {
     bool ok = false;
     while (!ok) {
         packagePos = getRandomPos(-20.0f, 20.0f, -20.0f, 20.0f);
@@ -493,7 +493,7 @@ void Tema2::NewPackage() {
     }
 }
 
-void Tema2::NewDest() {
+void DroneDelivery::NewDest() {
     if (!package) return;
 
     bool ok = false;
@@ -512,7 +512,7 @@ void Tema2::NewDest() {
     }
 }
 
-bool Tema2::Pickup() {
+bool DroneDelivery::Pickup() {
     if (package) return false;
 
     float dx = dronePos.x - packagePos.x;
@@ -523,7 +523,7 @@ bool Tema2::Pickup() {
     return distance < (packageSize + 1.0f);
 }
 
-bool Tema2::ReachDest() {
+bool DroneDelivery::ReachDest() {
     if (!package) return false;
 
     float dx = dronePos.x - destination.x;
@@ -534,7 +534,7 @@ bool Tema2::ReachDest() {
 }
 
 
-void Tema2::Init() {
+void DroneDelivery::Init() {
     camera = new implemented::Camera2();
     camera->Set(glm::vec3(0, 2, 3.5f), glm::vec3(0, 1, 0), glm::vec3(0, 1, 0));
 
@@ -546,8 +546,8 @@ void Tema2::Init() {
 
     {
         Shader* shader = new Shader("TerrainShader");
-        shader->AddShader(PATH_JOIN(window->props.selfDir, SOURCE_PATH::M1, "tema2", "VertexShader.glsl"), GL_VERTEX_SHADER);
-        shader->AddShader(PATH_JOIN(window->props.selfDir, SOURCE_PATH::M1, "tema2", "FragmentShader.glsl"), GL_FRAGMENT_SHADER);
+        shader->AddShader(PATH_JOIN(window->props.selfDir, SOURCE_PATH::M1, "DroneDelivery", "VertexShader.glsl"), GL_VERTEX_SHADER);
+        shader->AddShader(PATH_JOIN(window->props.selfDir, SOURCE_PATH::M1, "DroneDelivery", "FragmentShader.glsl"), GL_FRAGMENT_SHADER);
         shader->CreateAndLink();
         shaders[shader->GetName()] = shader;
     }
@@ -636,7 +636,7 @@ void Tema2::Init() {
    
 }
 
-void Tema2::FrameStart()
+void DroneDelivery::FrameStart()
 {
     glClearColor(0, 0.5f, 0.8f, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -644,7 +644,7 @@ void Tema2::FrameStart()
     glViewport(0, 0, resolution.x, resolution.y);
 }
 
-void Tema2::Update(float deltaTimeSeconds)
+void DroneDelivery::Update(float deltaTimeSeconds)
 {
     {
         glm::mat4 modelMatrix = glm::mat4(1);
@@ -828,12 +828,12 @@ void Tema2::Update(float deltaTimeSeconds)
     }
 }
 
-void Tema2::FrameEnd()
+void DroneDelivery::FrameEnd()
 {
     DrawCoordinateSystem(camera->GetViewMatrix(), projectionMatrix);
 }
 
-void Tema2::RenderMesh(Mesh * mesh, Shader * shader, const glm::mat4 & modelMatrix)
+void DroneDelivery::RenderMesh(Mesh * mesh, Shader * shader, const glm::mat4 & modelMatrix)
 {
     if (!mesh || !shader || !shader->program)
         return;
@@ -846,7 +846,7 @@ void Tema2::RenderMesh(Mesh * mesh, Shader * shader, const glm::mat4 & modelMatr
     mesh->Render();
 }
 
-void Tema2::Render2(Mesh* mesh, Shader* shader, const glm::mat4& modelMatrix,
+void DroneDelivery::Render2(Mesh* mesh, Shader* shader, const glm::mat4& modelMatrix,
     implemented::Camera2* cam, const glm::mat4& projection)
 {
     if (!mesh || !shader || !shader->program)
@@ -860,7 +860,7 @@ void Tema2::Render2(Mesh* mesh, Shader* shader, const glm::mat4& modelMatrix,
     mesh->Render();
 }
 
-void Tema2::OnInputUpdate(float deltaTime, int mods)
+void DroneDelivery::OnInputUpdate(float deltaTime, int mods)
 {
     float speed = 5.0f;
     glm::vec3 newPos = dronePos;
@@ -900,17 +900,17 @@ void Tema2::OnInputUpdate(float deltaTime, int mods)
     }
 }
 
-void Tema2::OnKeyPress(int key, int mods)
+void DroneDelivery::OnKeyPress(int key, int mods)
 {
 
 }
 
-void Tema2::OnKeyRelease(int key, int mods)
+void DroneDelivery::OnKeyRelease(int key, int mods)
 {
   
 }
 
-void Tema2::OnMouseMove(int mouseX, int mouseY, int deltaX, int deltaY)
+void DroneDelivery::OnMouseMove(int mouseX, int mouseY, int deltaX, int deltaY)
 {
     if (window->MouseHold(GLFW_MOUSE_BUTTON_RIGHT))
     {
