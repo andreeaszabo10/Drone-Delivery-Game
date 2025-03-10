@@ -1,16 +1,16 @@
 #pragma once
 
 #include "components/simple_scene.h"
-#include "lab_m1/tema2/camera.h"
+#include "camera.h"
 
 
 namespace m1
 {
-    class Tema2 : public gfxc::SimpleScene
+    class DroneDelivery : public gfxc::SimpleScene
     {
      public:
-         Tema2();
-        ~Tema2();
+         DroneDelivery();
+        ~DroneDelivery();
 
         void Init() override;
 
@@ -77,7 +77,7 @@ namespace m1
         std::vector<Cloud> clouds;
         std::vector<std::pair<glm::vec3, glm::vec3>> obstacles;
 
-        // TODO(student): If you need any other class variables, define them here.
+        
         float fov, aspect = window->props.aspectRatio, znear, zfar, bottom, top, left1, right1;
     };
 }   // namespace m1
